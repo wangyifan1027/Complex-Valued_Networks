@@ -7,3 +7,6 @@ Refactor the codes [Deep Complex Networks](https://github.com/ChihebTrabelsi/dee
 ## Related
 - The original **Paper**: [Deep Complex Networks](https://arxiv.org/abs/1705.09792)
 - The original **Codes**: [Deep Complex Networks](https://github.com/ChihebTrabelsi/deep_complex_networks) (*Keras* and *Theao* as backend)
+
+## 吐槽
+源代码好像也只有**FFT**部分需要用到**Theao**后端 \-\_\-!
