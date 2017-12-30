@@ -10,3 +10,5 @@ Refactor the codes [Deep Complex Networks](https://github.com/ChihebTrabelsi/dee
 
 ## 吐槽
 源代码好像也只有**FFT**部分需要用到**Theao**后端 \-\_\-!
+
+修改ing，导师没其他事的话预计1月7号之前吧
