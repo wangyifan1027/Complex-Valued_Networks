@@ -7,6 +7,7 @@
 import numpy as np
 from keras.layers import Layer, InputSpec
 from keras import initializers, regularizers, constraints
+from . import initializers as cinitializers
 import keras.backend as K
 
 def sqrt(shape, dtype = None):
@@ -36,10 +37,10 @@ class ComplexBatchNormalization(Layer):
                  center = True,
                  scale = True,
                  beta_initializer = 'zeros',
-                 gamma_diag_initializer = 'sqrt_init', # gamma is matrix with freedom of three degrees: rr, ri, ii
+                 gamma_diag_initializer = 'sqrt', # gamma is matrix with freedom of three degrees: rr, ri, ii
                  gamma_off_initializer = 'zeros',
                  moving_mean_initializer = 'zeros', # 三个moving_average变量均不可训练，用于计算和保存均值和协方差矩阵
-                 moving_variance_initializer = 'sqrt_init', # 每次计算该batch的均值和协方差矩阵，然后用加动量的moving_average更新moving_mean, moving_var, moving_cov
+                 moving_variance_initializer = 'sqrt', # 每次计算该batch的均值和协方差矩阵，然后用加动量的moving_average更新moving_mean, moving_var, moving_cov
                  moving_covariance_initializer = 'zeros',
                  beta_regularizer = None,
                  gamma_diag_regularizer = None, # 正则化
@@ -55,12 +56,12 @@ class ComplexBatchNormalization(Layer):
         self.epsilon = epsilon
         self.center = center
         self.scale = scale
-        self.beta_initializer               = initGet(beta_initializer)
-        self.gamma_diag_initializer         = initGet(gamma_diag_initializer)
-        self.gamma_off_initializer          = initGet(gamma_off_initializer)
-        self.moving_mean_initializer        = initGet(moving_mean_initializer)
-        self.moving_variance_initializer    = initGet(moving_variance_initializer)
-        self.moving_covariance_initializer  = initGet(moving_covariance_initializer)
+        self.beta_initializer               = cinitializers.get(beta_initializer)
+        self.gamma_diag_initializer         = cinitializers.get(gamma_diag_initializer)
+        self.gamma_off_initializer          = cinitializers.get(gamma_off_initializer)
+        self.moving_mean_initializer        = cinitializers.get(moving_mean_initializer)
+        self.moving_variance_initializer    = cinitializers.get(moving_variance_initializer)
+        self.moving_covariance_initializer  = cinitializers.get(moving_covariance_initializer)
         self.beta_regularizer               = regularizers.get(beta_regularizer)
         self.gamma_diag_regularizer         = regularizers.get(gamma_diag_regularizer)
         self.gamma_off_regularizer          = regularizers.get(gamma_off_regularizer)
@@ -248,12 +249,12 @@ class ComplexBatchNormalization(Layer):
             'epsilon': self.epsilon,
             'center': self.center,
             'scale': self.scale,
-            'beta_initializer':                 initSet(self.beta_initializer),
-            'gamma_diag_initializer':           initSet(self.gamma_diag_initializer),
-            'gamma_off_initializer':            initSet(self.gamma_off_initializer),
-            'moving_mean_initializer':          initSet(self.moving_mean_initializer),
-            'moving_variance_initializer':      initSet(self.moving_variance_initializer),
-            'moving_covariance_initializer':    initSet(self.moving_covariance_initializer),
+            'beta_initializer':                 cinitializers.serialize(self.beta_initializer),
+            'gamma_diag_initializer':           cinitializers.serialize(self.gamma_diag_initializer),
+            'gamma_off_initializer':            cinitializers.serialize(self.gamma_off_initializer),
+            'moving_mean_initializer':          cinitializers.serialize(self.moving_mean_initializer),
+            'moving_variance_initializer':      cinitializers.serialize(self.moving_variance_initializer),
+            'moving_covariance_initializer':    cinitializers.serialize(self.moving_covariance_initializer),
             'beta_regularizer':                   regularizers.serialize(self.beta_regularizer),
             'gamma_diag_regularizer':            regularizers.serialize(self.gamma_diag_regularizer),
             'gamma_off_regularizer':             regularizers.serialize(self.gamma_off_regularizer),

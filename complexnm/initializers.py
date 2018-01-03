@@ -9,6 +9,8 @@ from keras import initializers
 from keras.initializers import Initializer
 import numpy as np
 from numpy.random import RandomState
+import six
+from keras.utils.generic_utils import serialize_keras_object,deserialize_keras_object
 
 class Independent(Initializer):
     # Make every filters different from each other
@@ -161,3 +163,41 @@ class ComplexInit(Initializer):
 class SqrtInit(Initializer):
     def __call__(self, shape, dtype=None):
         return K.constant(1 / K.sqrt(2), shape=shape, dtype=dtype)
+
+
+glorot_independent = Independent(criterion = 'glorot')
+he_independent = Independent(criterion = 'he')
+glorot_complex_independent = ComplexIndependent(criterion = 'glorot')
+he_complex_independent = ComplexIndependent(criterion = 'he')
+glorot_complex = ComplexInit(criterion = 'glorot')
+he_complex = ComplexInit(criterion = 'he')
+sqrt = SqrtInit
+
+def serialize(initializer):
+    return serialize_keras_object(initializer)
+
+def deserialize(config, custom_objects = None):
+    return deserialize_keras_object(config,
+                                    module_objects = globals(),
+                                    custom_objects = custom_objects,
+                                    printable_module_name = 'complex_initializer')
+
+def get(identifier):
+    module_lists = globals()
+    if isinstance(identifier, dict):
+        class_name = identifier['class_name']
+        if module_lists.get(class_name) is None:
+            return initializers.get(identifier)
+        else:
+            return deserialize(identifier)
+    elif isinstance(identifier, six.string_types):
+        if module_lists.get(identifier) is None:
+            return initializers.get(identifier)
+        else:
+            config = {'class_name': str(identifier), 'config': {}}
+            return deserialize(config)
+    elif callable(identifier):
+        return identifier
+    else:
+        raise ValueError('Could not interpret initializer identifier:',
+                         identifier)
