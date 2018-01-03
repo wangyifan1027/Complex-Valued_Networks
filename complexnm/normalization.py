@@ -196,7 +196,20 @@ class ComplexBatchNormalization(Layer):
                 update_list.append(K.moving_average_update(self.moving_Vrr, Vrr, self.momentum))
                 update_list.append(K.moving_average_update(self.moving_Vii, Vii, self.momentum))
                 update_list.append(K.moving_average_update(self.moving_Vri, Vri, self.momentum))
-                #----------------
+            self.add_update(update_list, inputs)
+
+            def normalize_inference():
+                if self.center:
+                    inference_centered_real = input_real - self.moving_mean_real
+                    inference_centered_image = input_image - self.moving_mean_image
+                else:
+                    inference_centered_real = input_real
+                    inference_centered_image = input_image
+                return self.complexBN(inference_centered_real, inference_centered_image, Vrr, Vii,Vri)
+
+        return K.in_train_phase(input_bn,
+                                normalize_inference,
+                                training = training)
 
     def complexBN(self, centered_real, centered_image, Vrr, Vii, Vri):
         output_real = centered_real
@@ -228,6 +241,28 @@ class ComplexBatchNormalization(Layer):
         output_image = Wri * centered_real + Wii * centered_image
 
         return output_real, output_image
+    def get_config(self):
+        config = {
+            'axis': self.axis,
+            'momentum': self.momentum,
+            'epsilon': self.epsilon,
+            'center': self.center,
+            'scale': self.scale,
+            'beta_initializer':                 initSet(self.beta_initializer),
+            'gamma_diag_initializer':           initSet(self.gamma_diag_initializer),
+            'gamma_off_initializer':            initSet(self.gamma_off_initializer),
+            'moving_mean_initializer':          initSet(self.moving_mean_initializer),
+            'moving_variance_initializer':      initSet(self.moving_variance_initializer),
+            'moving_covariance_initializer':    initSet(self.moving_covariance_initializer),
+            'beta_regularizer':                   regularizers.serialize(self.beta_regularizer),
+            'gamma_diag_regularizer':            regularizers.serialize(self.gamma_diag_regularizer),
+            'gamma_off_regularizer':             regularizers.serialize(self.gamma_off_regularizer),
+            'beta_constraint':                    constraints.serialize(self.beta_constraint),
+            'gamma_diag_constraint':              constraints.serialize(self.gamma_diag_constraint),
+            'gamma_off_constraint':               constraints.serialize(self.gamma_off_constraint),
+        }
+        base_config = super(ComplexBatchNormalization, self).get_config()
+        return dict(list(base_config.items()) + list(config.items()))
 
 
 
