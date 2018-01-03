@@ -111,7 +111,11 @@ class ComplexIndependent(Initializer):
         weight_real = multip_real * indep_real
         multip_image = np.sqrt(desired_var / np.var(indep_image))
         weight_image = multip_real * indep_image
-        weight = np.concatenate([weight_real, weight_image], axis = -1)
+
+        # weight = np.concatenate([weight_real, weight_image], axis = -1)
+        # 为了便于能将weight_real 和 weight_image 分割开，采用stack, 而不是concatenate
+        # weight_real = weight[0], weight_image = weight[1]
+        weight = np.stack([weight_real, weight_image])
         return weight
 
     def get_config(self):
@@ -150,7 +154,8 @@ class ComplexInit(Initializer):
         phase = rng.uniform(low = -np.pi, high = np.pi, size = shape)
         weight_real = modulus * np.cos(phase)
         weight_image = modulus * np.sin(phase)
-        weight = np.concatenate([weight_real, weight_image], axis = -1)
+        # weight = np.concatenate([weight_real, weight_image], axis = -1)
+        weight = np.stack([weight_real, weight_image])
         return weight
 
 class SqrtInit(Initializer):
