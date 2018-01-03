@@ -264,21 +264,4 @@ class ComplexBatchNormalization(Layer):
         }
         base_config = super(ComplexBatchNormalization, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
