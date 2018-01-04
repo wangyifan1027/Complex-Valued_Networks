@@ -7,8 +7,9 @@ Refactor the codes [Deep Complex Networks](https://github.com/ChihebTrabelsi/dee
 ## Related
 - The original **Paper**: [Deep Complex Networks](https://arxiv.org/abs/1705.09792)
 - The original **Codes**: [Deep Complex Networks](https://github.com/ChihebTrabelsi/deep_complex_networks) (*Keras* and *Theao* as backend)
+- The extended **Paper**: [Spectral Representations for Convolutional Neural Networks](https://arxiv.org/abs/1506.03767) (Spectral Pooling and Spectral Representations)
 
-## 吐槽
-源代码好像也只有**FFT**部分需要用到**Theao**后端 \-\_\-!
+## Something
+看着很高大上，其实原理非常非常简单
 
-修改ing，导师没其他事的话预计1月7号之前吧
+看心情再决定要不要在这写下思路，或者直接看论文也行
