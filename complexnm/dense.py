@@ -69,14 +69,19 @@ class ComplexDense(Layer):
                                              name = 'bias_real',
                                              regularizer = self.bias_regularizer,
                                              constraint = self.bias_constraint)
+            self.bias_image = self.add_weight(shape = (self.units,),
+                                             initializer = self.bias_initializer,
+                                             name = 'bias_image',
+                                             regularizer = self.bias_regularizer,
+                                             constraint = self.bias_constraint)
         else:
             self.bias_real = None
-            self.bias_image= None
+            self.bias_image = None
 
         self.input_spec = InputSpec(min_ndim = 2, axes = {-1: input_dim})
         self.built = True
 
-    def call(self,inputs):
+    def call(self, inputs, **kwargs):
         assert isinstance(inputs, list)
         input_real, input_image = inputs[0], inputs[1]
         input_shape = K.int_shape(input_real)
