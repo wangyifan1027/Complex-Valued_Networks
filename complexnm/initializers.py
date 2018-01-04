@@ -164,7 +164,7 @@ class SqrtInit(Initializer):
     def __call__(self, shape, dtype=None):
         return K.constant(1 / K.sqrt(2), shape=shape, dtype=dtype)
 
-
+# keras 可接受的initializer均是可运行的函数（或者定义了__call__的类）并且参数只能是shape，dtype，所以带其他初始化参数的initializer类需要预先初始化
 glorot_independent = Independent(criterion = 'glorot')
 he_independent = Independent(criterion = 'he')
 glorot_complex_independent = ComplexIndependent(criterion = 'glorot')
@@ -182,6 +182,7 @@ def deserialize(config, custom_objects = None):
                                     custom_objects = custom_objects,
                                     printable_module_name = 'complex_initializer')
 
+# initializer不在该作用域范围内，则转到keras官方initializers类
 def get(identifier):
     module_lists = globals()
     if isinstance(identifier, dict):
